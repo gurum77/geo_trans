@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- map -->
+    <div id="map" style="width: 100%; height: 700px"></div>
+
+    <div id='trans_coord'>
+        수치지도 좌표 x : <input id='x' type="number" value=186799.30748> y : <input type="number" id="y" value=514917.91631> <br>
+        경,위도로 변환 : 
+        <button onclick="toGRS80('central_50')">GRS80(중부원점,50만)</button>
+        <button onclick="toGRS80('west')">GRS80(서부원점)</button>
+        <button onclick="toGRS80('central')">GRS80(중부원점)</button>
+        <button onclick="toGRS80('east')">GRS80(동부원점)</button>
+        <button onclick="toGRS80('east_sea')">GRS80(동해(울릉)원점,50만)</button>
+         <br>
+        경도 : <input type="number" id="lat"> 위도 : <input type="number" id="lon">
+    </div>
+
+
+
+    <!-- kakao map api init -->
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a3388fefddf07e37d08d13cddf10b834&libraries=services"
+    ></script>
+    
+    <!-- map init-->
+    <script type="text/javascript" src="http://map.vworld.kr/js/map/proj4js.js"></script> 
+    <script src="./init_proj4js.js"></script>
+    <script src="./init_map.js"></script>
+    <script src="./callback.js"></script>
+  </body>
+</html>
