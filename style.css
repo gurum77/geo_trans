@@ -1,0 +1,31 @@
+div.content{
+    display: inline-block;
+    /* background-color: red; */
+    height:700px;
+    padding-left: 20px;
+}
+div.map-content{
+    display: inline-block;
+    /* background-color: red; */
+    height:700px;
+    padding-left: 20px;
+}
+
+p{
+    font-size: large;
+}
+
+input, button{
+    text-align: center;
+    font-size: large;
+    padding-top: 5px;
+    padding-bottom: 5px
+}
+.content button{
+    margin: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+input{
+    width: 100%;
+}

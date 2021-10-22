@@ -5,24 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
   </head>
+  
+
   <body>
     <!-- map -->
-    <div id="map" style="width: 100%; height: 700px"></div>
+    <div class='map-content' id="map" style="width: 60%">fsdf</div>
 
-    <div id='trans_coord'>
-        수치지도 좌표 x : <input id='x' type="number" value=186799.30748> y : <input type="number" id="y" value=514917.91631> <br>
-        경,위도로 변환 : 
-        <button onclick="toGRS80('central_50')">GRS80(중부원점,50만)</button>
-        <button onclick="toGRS80('west')">GRS80(서부원점)</button>
-        <button onclick="toGRS80('central')">GRS80(중부원점)</button>
-        <button onclick="toGRS80('east')">GRS80(동부원점)</button>
-        <button onclick="toGRS80('east_sea')">GRS80(동해(울릉)원점,50만)</button>
-         <br>
-        경도 : <input type="number" id="lat"> 위도 : <input type="number" id="lon">
+    <div class='content' id='input' style='width:30%;position:absolute'>
+        <h2>X, Y(수학좌표) : </h2> <input id='xy' type="text" value='186799.30748,514917.91631'>
+        <h2>변환</h2>
+        <button onclick="toGRS80('central_50')">중부원점,50만 => GRS80</button>
+        <button onclick="toGRS80('west')">서부원점 => GRS80</button>
+        <button onclick="toGRS80('central')">중부원점 => GRS80</button>
+        <button onclick="toGRS80('east')">동부원점 => GRS80</button>
+        <button onclick="toGRS80('east_sea')">동해(울릉)원점,50만 => GRS80</button>
+        <h2>경도, 위도</h2>
+        <input id='latlng' type="text">
     </div>
-
-
 
     <!-- kakao map api init -->
     <script
