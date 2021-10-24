@@ -1,51 +1,34 @@
 let markers = [];
 // map container
-var mapContainer = document.getElementById("map"), // ������ ǥ���� div
+var mapContainer = document.getElementById("kmap"), 
   mapOption = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667), // ������ �߽���ǥ
-    level: 3, // ������ Ȯ�� ����
+    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    level: 3, 
   };
 
-// ������ ǥ���� div��  ���� �ɼ�����  ������ �����մϴ�
-var map = new kakao.maps.StaticMap(mapContainer, mapOption);
-console.dir(map);
+// 지도 추가
+kmap = new kakao.maps.Map(mapContainer, mapOption);
 
-// �� ��Ʈ��
+
 let zoomControl = new kakao.maps.ZoomControl();
-// map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+kmap.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-// ���� ���� ���� ��Ʈ��
+
 var mapTypeControl = new kakao.maps.MapTypeControl();
-// map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPLEFT);
+kmap.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPLEFT);
 
 
 
 // 클릭시 이벤트
-kakao.maps.event.addListener(map, "click", function (mouseEvent) {
+kakao.maps.event.addListener(kmap, "click", function (mouseEvent) {
 
   // 마커 표시
   addMarker(mouseEvent.latLng);
-
-  let img = map.querySelector("img");
-  console.log(img);
 })
-// Using fetch
-async function downloadImage(imageSrc) {
-  const image = await fetch(imageSrc)
-  const imageBlog = await image.blob()
-  const imageURL = URL.createObjectURL(imageBlog)
-
-  const link = document.createElement('a')
-  link.href = imageURL
-  link.download = 'image file name here'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-}
 // marker를 추가한다.
 function addMarker(latLng){
   var marker = new kakao.maps.Marker({ position: latLng });
-  marker.setMap(map);
+  marker.setMap(kmap);
 
   // 클릭한 위치 정보 표시
   showMarkerInfo(marker);
