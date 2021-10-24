@@ -1,9 +1,68 @@
+.menu-bar{
+    background-color: rgb(0, 100, 0);
+    text-align: center;
+    padding: 0px;
+}
+
+.menu-bar ul{
+    display: inline-flex;
+    list-style: none;
+    color: #fff;
+    padding: 0px;
+
+}
+.menu-bar ul li{
+    width: 120px;
+    padding: 3px;
+    margin: 0px;
+    font-size: small;
+
+}
+
+
+.content li{
+    font-size: small;
+}
+
+.menu-bar ul li a{ 
+    text-decoration: none;
+    color:white
+}
+
+.active, .menu-bar ul li:hover{ 
+background: #2bab0d;
+border-radius: 3px;
+}
+
+.trans_coord_submenu{
+    display: none;
+}
+
+
+ .menu-bar ul li:hover .trans_coord_submenu{
+    display: block;
+    position: absolute;
+    background: rgb(0, 100, 0);
+    margin-top:  15px;
+    margin-left:15px
+
+} 
+
+fieldset{
+    margin : 10px;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+}
+
 div.content{
     display: inline-block;
     /* background-color: red; */
     height:700px;
     padding-left: 20px;
 }
+
 div.map-content{
     display: inline-block;
     /* background-color: red; */
@@ -11,13 +70,16 @@ div.map-content{
     padding-left: 20px;
 }
 
+
+
+
 p{
-    font-size:medium;
+    font-size:small;
 }
 
 input, button{
     text-align: center;
-    font-size: medium;
+    font-size: small;
     padding-top: 3px;
     padding-bottom: 3px
 }

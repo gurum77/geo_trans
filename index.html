@@ -1,40 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="./style.css">
-  </head>
-  
 
-  <body>
-    <!-- map -->
-    <div class='map-content' id="map" style="width: 60%">fsdf</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geo Trans</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
 
-    <div class='content' id='input' style='width:30%;position:absolute'>
-        <h2>X, Y(수학좌표) : </h2> <input id='xy' type="text" value='186799.30748,514917.91631'>
-        <h2>변환</h2>
-        <button onclick="toGRS80('central_50')">중부원점,50만 => GRS80</button>
-        <button onclick="toGRS80('west')">서부원점 => GRS80</button>
-        <button onclick="toGRS80('central')">중부원점 => GRS80</button>
-        <button onclick="toGRS80('east')">동부원점 => GRS80</button>
-        <button onclick="toGRS80('east_sea')">동해(울릉)원점,50만 => GRS80</button>
-        <h2>경도, 위도</h2>
-        <input id='latlng' type="text">
-    </div>
 
-    <!-- kakao map api init -->
-    <script
-      type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a3388fefddf07e37d08d13cddf10b834&libraries=services"
-    ></script>
-    
-    <!-- map init-->
-    <script type="text/javascript" src="http://map.vworld.kr/js/map/proj4js.js"></script> 
-    <script src="./init_proj4js.js"></script>
-    <script src="./init_map.js"></script>
-    <script src="./callback.js"></script>
-  </body>
+<body>
+  <!-- menu bar-->
+  <div class="menu-bar" >
+    <ul>
+      <li><a href="javascript:clearMarkers()">마커 지우기</a></li>
+      <li><a href="#">좌표 변환</a>
+        <li><a href="javascript:saveMap()">이미지 저장</a></li>
+      </div>
+      </li>
+    </ul>
+  </div>
+  <!-- map -->
+  <div class='map-content' id="map" style="width: 60%">fsdf</div>
+
+  <!-- 오른쪽 컨텐츠 -->
+  <div class='content' id='input' style='width:30%;position:absolute'>
+    <fieldset id="trans_coord_fieldset">
+      <legend> 좌표변환 </legend>
+      <h3>X, Y(수학좌표) : </h3> <input id='xy' type="text" value='186799.30748,514917.91631'>
+      <h3>변환</h3>
+      <button onclick="toGRS80('central_50')">중부원점,50만 ▶ GRS80</button>
+      <button onclick="toGRS80('west')">서부원점 ▶ GRS80</button>
+      <button onclick="toGRS80('central')">중부원점 ▶ GRS80</button>
+      <button onclick="toGRS80('east')">동부원점 ▶ GRS80</button>
+      <button onclick="toGRS80('east_sea')">동해(울릉)원점,50만 ▶ GRS80</button>
+      <h3>경도, 위도</h3>
+      <input id='latlng' type="text">
+    </fieldset>
+
+    <fieldset id="marker_info">
+      <legend>마커 정보</legend>
+      <ul>
+        <li id="grs80">경도, 위도 : </li>
+        <li id="central_50">중부원점,50만(x,y) : </li>
+        <li id="west">서부원점(x,y) : </li>
+        <li id="central">중부원점(x,y) : </li>
+        <li id="east">동부원점(x,y) : </li>
+        <li id="east_sea">동해(울릉)원점,50만(x,y) : </li>
+      </ul>
+      
+      <ul>
+        <li style="list-style: none; color: red;">
+          지도 클릭 : 마커생성 / 정보표시
+        </li>
+        <li style="list-style: none; color: red;">
+          마커 선택 : 정보표시
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+
+
+  <!-- kakao map api init -->
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a3388fefddf07e37d08d13cddf10b834&libraries=services"></script>
+
+  <!-- map init-->
+  <script type="text/javascript" src="http://map.vworld.kr/js/map/proj4js.js"></script>
+  <script src="./init_proj4js.js"></script>
+
+  <script src="./map_helper.js"></script>
+  <script src="./callback.js"></script>
+  <script src="./html2canvas.min.js"></script>
+</body>
+
 </html>
