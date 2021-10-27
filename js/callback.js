@@ -1,7 +1,10 @@
 // 모든 입력 field set을 숨긴다.
 // marker 정보 입력은 유지
 function hideAllInputFieldSet(){
-
+let alignment_fieldset = document.getElementById("alignment_fieldset");
+let trans_coord_fieldset = document.getElementById("trans_coord_fieldset");
+alignment_fieldset.style.display = 'none';
+trans_coord_fieldset.style.display = 'none';
 }
 
 // 평면선형 만들기
@@ -9,7 +12,16 @@ function makeAlignment(){
   hideAllInputFieldSet();
 
   // 평면선형 field set을 표시한다.
-  
+  document.getElementById("alignment_fieldset").style.display = 'inline-block';
+ 
+}
+
+// 좌표변환
+function transCoord(){
+  hideAllInputFieldSet();
+
+  // 평면선형 field set을 표시한다.
+  document.getElementById("trans_coord_fieldset").style.display = 'inline-block';
 }
 
 function toggleVWorldMap() {
