@@ -6,15 +6,15 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	//UTM-K
 	Proj4js.defs["EPSG:5179"] = "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
-	//ÁßºÎ¿øÁ¡(50¸¸)
+	//ï¿½ßºÎ¿ï¿½ï¿½ï¿½(50ï¿½ï¿½)
 	Proj4js.defs["EPSG:5181"]="+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs";
-	//¼­ºÎ¿øÁ¡
+	//ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½
 	Proj4js.defs["EPSG:5185"] = "+proj=tmerc +lat_0=38 +lon_0=125 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs";
-	//ÁßºÎ¿øÁ¡-o
+	//ï¿½ßºÎ¿ï¿½ï¿½ï¿½-o
 	Proj4js.defs["EPSG:5186"] = "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs";
-	//µ¿ºÎ¿øÁ¡
+	//ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½
 	Proj4js.defs["EPSG:5187"] = "+proj=tmerc +lat_0=38 +lon_0=129 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs";
-	//µ¿ÇØ(¿ï¸ª)¿øÁ¡
+	//ï¿½ï¿½ï¿½ï¿½(ï¿½ï¸ª)ï¿½ï¿½ï¿½ï¿½
 	Proj4js.defs["EPSG:5188"] = "+proj=tmerc +lat_0=38 +lon_0=131 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs";
 	
 });
