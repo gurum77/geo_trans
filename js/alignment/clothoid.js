@@ -1,11 +1,6 @@
-class Point {
-  Point(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-  x = 0;
-  y = 0;
-}
+import Curve from "./curve.js";
+import Point from "./point.js";
+
 
 const math00 = 1;
 const math01 = 6;
@@ -30,30 +25,29 @@ const math172 = 1000;
 const math16 = math161 * math162;
 const math17 = math171 * math172;
 
-class Clothoid {
-  l = 0;
+export default class Clothoid extends Curve {
   a = 0;
-  constructor(l, a){
-    this.l = l;
+  constructor(length, a){
+    this.length = length;
     this.a = a;
   }
-  static calcA(l, r) {
-    return Math.sqrt(l * r);
+  static calcA(length, radius) {
+    return Math.sqrt(length * radius);
   }
-  static calcL(a, r) {
-    return (a * a) / r;
+  static calcL(a, radius) {
+    return (a * a) / radius;
   }
 
-  static calcPoint(a, l) {
-    if (a == 0 || l == 0) return new Point(0, 0);
+  static calcPoint(a, length) {
+    if (a == 0 || length == 0) return new Point(0, 0);
 
     let uXy = new Point(0, 0);
-    let jl = l / a;
+    let jl = length / a;
     let jb = jl * jl;
     
     //	수학식 2^n*n!*(2*n+1). 참조 사이트 : http://oeis.org/A014481/list
     uXy.x =
-      l *
+      length *
       (1.0 / math00 -
         (jb * jb) / math02 +
         (jb * jb * jb * jb) / math04 -
@@ -82,7 +76,7 @@ class Clothoid {
           math16);
 
     uXy.y =
-      l *
+      length *
       jb *
       (1.0 / math01 -
         (jb * jb) / math03 +

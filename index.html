@@ -1,152 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Geo Trans</title>
-    <link rel="stylesheet" href="./css/style.css" />
-  </head>
 
-  <body>
-    <!-- menu bar-->
-    <div class="menu-bar">
-      <ul>
-        <li><a href="javascript:clearMarkers()">마커 지우기</a></li>
-        <li><a href="javascript:transCoord()">좌표 변환</a></li>
-        <li><a href="javascript:makeAlignment()">평면선형</a></li>
-        <li id="map_toggle">
-          <a href="javascript:toggleVWorldMap()">브이월드3D지도</a>
-        </li>
-      </ul>
-    </div>
-    <!-- map -->
-    <div class="map-content" id="kmap" style="width: 60%">Kakao map</div>
-    <div class="map-content" id="vmap" style="width: 60%; display: none">
-      VWorld map
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geo Trans</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
 
-    <!-- 오른쪽 컨텐츠 -->
-    <div class="content" id="input" style="width: 30%; position: absolute">
-      <!-- 평면선형 입력 field set -->
-      <fieldset class="input" id="alignment_fieldset" style="display: none">
-        <legend>평면선형</legend>
-        <h3>BP(North, East)</h3>
-        <input
-          class="coordinates"
-          id="bp"
-          type="text"
-          placeholder="186799.30748,514917.91631"
-          value="186799.30748,514917.91631"
-        />
-        <br />
-        <h3>방향(Degree)</h3>
-        <input class="coordinates" id="dir" type="text" placeholder="0" />
-        <br />
-        <h3>곡선제원</h3>
-        <textarea
-          class="curves"
-          name="curves"
-          id="curves"
-          col="95%"
-          rows="10"
-          placeholder="line,l=100
+<body>
+  <!-- menu bar-->
+  <div class="menu-bar">
+    <ul>
+      <li><a href="javascript:clearMarkers()">마커 지우기</a></li>
+      <li><a href="javascript:transCoord()">좌표 변환</a></li>
+      <li><a href="javascript:makeAlignment()">평면선형</a></li>
+      <li id="map_toggle">
+        <a href="javascript:toggleVWorldMap()">브이월드3D지도</a>
+      </li>
+    </ul>
+  </div>
+  <!-- map -->
+  <div class="map-content" id="kmap" style="width: 60%">Kakao map</div>
+  <div class="map-content" id="vmap" style="width: 60%; display: none">
+    VWorld map
+  </div>
+
+  <!-- 오른쪽 컨텐츠 -->
+  <div class="content" id="input" style="width: 30%; position: absolute">
+    <!-- 평면선형 입력 field set -->
+    <fieldset class="input" id="alignment_fieldset" style="display: none">
+      <legend>평면선형</legend>
+      <h3>BP(North, East)</h3>
+      <input class="coordinates" id="bp" type="text" placeholder="186799.30748,514917.91631"
+        value="186799.30748,514917.91631" />
+      <br />
+      <h3>방향(Degree)</h3>
+      <input class="coordinates" id="dir" type="text" placeholder="0" />
+      <br />
+      <h3>곡선제원</h3>
+      <textarea class="curves" name="curves" id="curves" col="95%" rows="10" placeholder="line,l=100
 arc,l=300,r=400
 clothoid,a=200,r1=0,r2=100
 clothoid,a=200,r1=100,r2=200
 clothoid,a=200,r1=100,r2=0
 line,l=200
-"
-        >
+">
 line,l=100
 arc,l=300,r=400
 clothoid,a=200,r1=0,r2=100
 clothoid,a=200,r1=100,r2=200
 clothoid,a=200,r1=100,r2=0
-line,l=200</textarea
-        >
+line,l=200</textarea>
 
-        <button id="draw">그리기</button>
-      </fieldset>
+      <button id="draw" onclick="drawAlignment()">그리기</button>
+    </fieldset>
 
-      <!-- 좌표변환 field set -->
-      <fieldset class="input" id="trans_coord_fieldset">
-        <legend>좌표변환</legend>
-        <h3>X, Y(수학좌표) :</h3>
-        <input
-          class="coordinates"
-          id="xy"
-          type="text"
-          placeholder="186799.30748,514917.91631"
-          value="186799.30748,514917.91631"
-        />
-        <br /><br />
-        <h3>변환</h3>
-        <button onclick="toGRS80('central_50')">중부원점,50만 ▶ GRS80</button>
-        <button onclick="toGRS80('west')">서부원점 ▶ GRS80</button>
-        <button onclick="toGRS80('central')">중부원점 ▶ GRS80</button>
-        <button onclick="toGRS80('east')">동부원점 ▶ GRS80</button>
-        <button onclick="toGRS80('east_sea')">
-          동해(울릉)원점,50만 ▶ GRS80
-        </button>
-        <br /><br />
-        <h3>경도, 위도</h3>
-        <input
-          class="coordinates"
-          id="latlng"
-          type="text"
-          placeholder="경도,위도로 계산된 결과 표시"
-        />
-      </fieldset>
+    <!-- 좌표변환 field set -->
+    <fieldset class="input" id="trans_coord_fieldset">
+      <legend>좌표변환</legend>
+      <h3>X, Y(수학좌표) :</h3>
+      <input class="coordinates" id="xy" type="text" placeholder="186799.30748,514917.91631"
+        value="186799.30748,514917.91631" />
+      <br /><br />
+      <h3>변환</h3>
+      <button onclick="toGRS80('central_50')">중부원점,50만 ▶ GRS80</button>
+      <button onclick="toGRS80('west')">서부원점 ▶ GRS80</button>
+      <button onclick="toGRS80('central')">중부원점 ▶ GRS80</button>
+      <button onclick="toGRS80('east')">동부원점 ▶ GRS80</button>
+      <button onclick="toGRS80('east_sea')">
+        동해(울릉)원점,50만 ▶ GRS80
+      </button>
+      <br /><br />
+      <h3>경도, 위도</h3>
+      <input class="coordinates" id="latlng" type="text" placeholder="경도,위도로 계산된 결과 표시" />
+    </fieldset>
 
-      <!-- 마커 정보 field set -->
-      <fieldset class="input" id="marker_info">
-        <legend>마커 정보</legend>
-        <ul>
-          <li id="grs80">경도, 위도 :</li>
-          <li id="central_50">중부원점,50만(x,y) :</li>
-          <li id="west">서부원점(x,y) :</li>
-          <li id="central">중부원점(x,y) :</li>
-          <li id="east">동부원점(x,y) :</li>
-          <li id="east_sea">동해(울릉)원점,50만(x,y) :</li>
-        </ul>
+    <!-- 마커 정보 field set -->
+    <fieldset class="input" id="marker_info">
+      <legend>마커 정보</legend>
+      <ul>
+        <li id="grs80">경도, 위도 :</li>
+        <li id="central_50">중부원점,50만(x,y) :</li>
+        <li id="west">서부원점(x,y) :</li>
+        <li id="central">중부원점(x,y) :</li>
+        <li id="east">동부원점(x,y) :</li>
+        <li id="east_sea">동해(울릉)원점,50만(x,y) :</li>
+      </ul>
 
-        <ul>
-          <li style="list-style: none; color: red">
-            지도 클릭 : 마커생성 / 정보표시
-          </li>
-          <li style="list-style: none; color: red">마커 선택 : 정보표시</li>
-        </ul>
-      </fieldset>
-    </div>
+      <ul>
+        <li style="list-style: none; color: red">
+          지도 클릭 : 마커생성 / 정보표시
+        </li>
+        <li style="list-style: none; color: red">마커 선택 : 정보표시</li>
+      </ul>
+    </fieldset>
+  </div>
 
-    <!-- kakao map api init -->
-    <script
-      type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a3388fefddf07e37d08d13cddf10b834&libraries=services"
-    ></script>
-    <!-- vworld map api init-->
-    <script
-      type="text/javascript"
-      src="http://map.vworld.kr/js/webglMapInit.js.do?version=2.0&apiKey=8CD73C95-67EA-3C99-9425-6B5945D2096D
-    "
-    ></script>
-    <!-- map init-->
-    <script
-      type="text/javascript"
-      src="http://map.vworld.kr/js/map/proj4js.js"
-    ></script>
-    <script src="./js/status.js"></script>
-    <script src="./js/init-proj4js.js"></script>
-    <script src="./js/ui-marker-info.js"></script>
-    <script src="./js/callback.js"></script>
-    <script type="module">
-      import MapManager from "./js/map-manager.js";
-      mapManager = new MapManager();
-      mapManager.init(
-        document.getElementById("kmap"),
-        document.getElementById("vmap")
-      );
-    </script>
-  </body>
+  <!-- kakao map api init -->
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a3388fefddf07e37d08d13cddf10b834&libraries=services"></script>
+  <!-- vworld map api init-->
+  <script type="text/javascript" src="http://map.vworld.kr/js/webglMapInit.js.do?version=2.0&apiKey=8CD73C95-67EA-3C99-9425-6B5945D2096D
+    "></script>
+  <!-- map init-->
+  <script type="text/javascript" src="http://map.vworld.kr/js/map/proj4js.js"></script>
+  <script src="./js/status.js"></script>
+  <script src="./js/init-proj4js.js"></script>
+  <script src="./js/ui-marker-info.js"></script>
+  <script src="./js/callback.js"></script>
+  <script type="module" src="./js/callback-make-alignment.js">
+  function drawAlignment(){
+  
+  }
+  </script>
+  <script type="module">
+    import MapManager from "./js/map-manager.js";
+    mapManager = new MapManager();
+    mapManager.init(
+      document.getElementById("kmap"),
+      document.getElementById("vmap")
+    );
+  </script>
+</body>
+
 </html>
