@@ -23,7 +23,6 @@ export default class Alignment {
      * @param {string} str 
      */
     addCurveByScript(str) {
-        debugger
         let obj = this.parseScript(str);
         if (!obj.has("tag"))
             return false;
