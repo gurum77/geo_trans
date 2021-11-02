@@ -14,6 +14,61 @@ export default class Alignment {
 
     // 맵에 점을 찍는다.
     mapManager.drawPolyline(points);
+
+    // tick을 그린다.
+    let distances = this.getDistances(20);
+    points.forEach(p => {
+
+    });
+
+  }
+
+  // distFromStt위치에 있는 curve 리턴
+  getCurveInfoAtDistFromStt(distFromStt) {
+    let curDist = 0;
+    this.curves.forEach(c => {
+      if (curDist + c.length > distFromStt) {
+        return { curve: c, distToPrevCurve: curDist };
+      }
+    }
+    );
+  }
+
+  /**
+   * 시작점에서 떨어진 거리에서의 좌표 리턴
+   * @param {number} distFromStt 
+   */
+  getPoint(distFromStt) {
+    // curve와 curve이전까지 누적 거리
+    let curveInfo = getCurveInfoAtDistFromStt(distFromStt);
+    let distFromCurveStt = distFromStt - curveInfo.distToPrevCurve;
+    return curveInfo.curve.getPoint(distFromCurveStt);
+  }
+
+  /**
+   * 선형의 전체 길이 리턴
+   */
+  getLength() {
+    let len = 0;
+    this.curves.forEach(c => len += c.length);
+    return len;
+  }
+  /**
+   * interval 간격으로 나눈 거리값을 리턴
+   * @param {number} interval 
+   */
+  getDistances(interval) {
+    let distances = [];
+    let len = this.getLength();
+    let count = len / interval;
+    for (let i = 0; i < count; ++i) {
+      distances.push(i * interval);
+    }
+    if (distances.length == 0)
+      distances.push(0);
+    else if (distances[distances.length - 1] != len)
+      distances.push(len);
+    return distances;
   }
 
   // interval 간격으로 좌표들을 계산한다.

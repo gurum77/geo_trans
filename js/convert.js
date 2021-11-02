@@ -1,9 +1,9 @@
 export default class Convert {
   /**
-   * degree ¸¦ radianÀ¸·Î º¯È¯ÇØ¼­ ¸®ÅÏ
+   * degree ï¿½ï¿½ radianï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½
    * @param {number} degree
    */
   static degreeToRadian(degree) {
-    return degree * Math.PI * 180.0;
+    return degree * Math.PI / 180.0;
   }
 }

@@ -1,5 +1,6 @@
 export default class KMapManager {
   markers = [];
+  polylines =[];
   map;
 
   // 카카오맵 초기화
@@ -58,7 +59,10 @@ export default class KMapManager {
   }
 
   clearMarkers() {
-    for (let i = 0; i < this.markers.length; ++i) this.markers[i].setMap(null);
+    this.markers.forEach(m=>m.setMap(null));
+    this.markers = [];
+    this.polylines.forEach(p=>p.setMap(null));
+    this.polylines = [];
   }
 
   /**
@@ -86,5 +90,7 @@ export default class KMapManager {
       strokeStyle: 'solid',
     });
     polyline.setMap(this.map);
+
+    this.polylines.push(polyline);
   }
 }
