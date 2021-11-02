@@ -60,4 +60,12 @@ export default class KMapManager {
   clearMarkers() {
     for (let i = 0; i < this.markers.length; ++i) this.markers[i].setMap(null);
   }
+
+  /**
+   * 위경도를 받아서 점을 그린다.
+   * @param {[]} latLngs
+   */
+  drawPoints(latLngs) {
+    latLngs.forEach((latLng) => this.addMarker(latLng.lat, latLng.lng));
+  }
 }

@@ -2,7 +2,7 @@ export default class VMapManager {
   markers = [];
   map;
 
-  // Ä«Ä«¿À¸Ê ÃÊ±âÈ­
+  // Ä«Ä«ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
   init(mapContainer) {
     let mapOptions = new vw.MapOptions(
       vw.BasemapType.GRAPHIC,
@@ -22,8 +22,8 @@ export default class VMapManager {
 
     this.map = new vw.Map("vmap", mapOptions);
 
-    // Å¬¸¯½Ã ÀÌº¥Æ®
-    // Å¬¸¯ÇÏ¸é ¸¶Ä¿ Ãß°¡
+    // Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
+    // Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½Ä¿ ï¿½ß°ï¿½
     this.map.onClick.addEventListener(function (
       windowPosition,
       ecefPositio,
@@ -36,13 +36,13 @@ export default class VMapManager {
     });
   }
 
-  // Áß½É ÁÂÇ¥¸¦ À§°æµµ·Î ¸®ÅÏ
+  // ï¿½ß½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½æµµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
   getCenter() {
     let pos = this.map.getCurrentPosition();
     return { lat: pos.position.y, lng: pos.position.x };
   }
 
-  // Áß½ÉÁÂÇ¥ À§°æµµ·Î ¼³Á¤
+  // ï¿½ß½ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½æµµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
   setCenter(lat, lng) {
     let pos = new vw.CameraPosition(
       new vw.CoordZ(lng, lat, 2000),
@@ -52,14 +52,14 @@ export default class VMapManager {
     this.map.moveTo(pos);
   }
 
-  // marker¸¦ Ãß°¡ÇÑ´Ù.
+  // markerï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ñ´ï¿½.
   addMarker(lat, lng) {
     var point1Coord = new vw.Coord(lng, lat);
     var pt = new vw.geom.Point(point1Coord);
 
     pt.setImage("http://map.vworld.kr/images/op02/map_point.png");
     // pt.setName(mngNo);
-    pt.setFont("°íµñ");
+    pt.setFont("ï¿½ï¿½ï¿½ï¿½");
     pt.setFontSize(20);
     pt.create();
     this.markers.push(pt);
@@ -79,5 +79,13 @@ export default class VMapManager {
     for (let i = 0; i < this.markers.length; ++i) {
       this.map.removeObject(this.markers[i]);
     }
+  }
+
+  /**
+   * ìœ„ê²½ë„ë¥¼ ë°›ì•„ì„œ ì ì„ ê·¸ë¦°ë‹¤.
+   * @param {[]} latLngs 
+   */
+  drawPoints(latLngs){
+    latLngs.forEach(latLng=>this.addMarker(latLng.lat, latLng.lng));
   }
 }

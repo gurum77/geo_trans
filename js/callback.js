@@ -63,12 +63,13 @@ function hideAllInputFieldSet(){
     let latlng = document.querySelector("#input").querySelector("#latlng");
   
     let p = new Proj4js.Point(x, y);
-    let from = new Proj4js.Proj("EPSG:5181");
-  
-    if (origin == "west") from = new Proj4js.Proj("EPSG:5185");
-    else if (origin == "east") from = new Proj4js.Proj("EPSG:5187");
-    else if (origin == "central") from = new Proj4js.Proj("EPSG:5186");
-    else if (origin == "east_sea") from = new Proj4js.Proj("EPSG:5188");
+    espgType = "EPSG:5181";
+    if (origin == "west") espgType = "EPSG:5185";
+    else if (origin == "east") espgType = "EPSG:5187";
+    else if (origin == "central") espgType = "EPSG:5186";
+    else if (origin == "east_sea") espgType = "EPSG:5188";
+
+    let from = new Proj4js.Proj(espgType);
   
     let to = new Proj4js.Proj("EPSG:4019");
     Proj4js.transform(from, to, p);

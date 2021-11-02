@@ -1,12 +1,13 @@
+import LatLng from "./alignment/LatLng.js";
 import KMapManager from "./kmap-manager.js";
 import VMapManager from "./vmap-manager.js";
 
-// kakao map°ú vworld mapÀ» Áö¿ø
+// kakao mapï¿½ï¿½ vworld mapï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 export default class MapManager {
   kMapManager;
   vMapManager;
 
-  // ¸Ê ÃÊ±âÈ­
+  // ï¿½ï¿½ ï¿½Ê±ï¿½È­
   init(kMapContainer, vMapContainer) {
     this.kMapManager = new KMapManager();
     this.kMapManager.init(kMapContainer);
@@ -29,5 +30,21 @@ export default class MapManager {
   clearMarkers(){
     this.kMapManager.clearMarkers();
     this.vMapManager.clearMarkers();
+  }
+
+  /**
+   * xyì¢Œí‘œë¡œ ì ì„ ì°ëŠ”ë‹¤.
+   * @param {[]} points 
+   */
+  drawPoints(points){
+    
+    let latLngs = [];
+    points.forEach(p=>{
+      let latlng = new LatLng();
+      latlng.fromXY(p.x, p.y);
+      latLngs.push(latlng);
+    });
+    this.kMapManager.drawPoints(latLngs);
+    this.vMapManager.drawPoints(latLngs);
   }
 }

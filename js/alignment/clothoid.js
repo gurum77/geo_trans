@@ -1,7 +1,6 @@
 import Curve from "./curve.js";
 import Point from "./point.js";
 
-
 const math00 = 1;
 const math01 = 6;
 const math02 = 40;
@@ -27,15 +26,39 @@ const math17 = math171 * math172;
 
 export default class Clothoid extends Curve {
   a = 0;
-  constructor(length, a){
-    this.length = length;
-    this.a = a;
+  radius = 0;
+
+  /**
+   * startPoint부터 interval 간격으로 좌표를 리턴
+   * @param {Point} startPoint
+   * @param {number} interval
+   */
+  getPoints(startPoint, interval) {
+    let points = [];
+    let distances = this.getDistances(interval);
+    distances.forEach((dist) => {
+      let point = Clothoid.calcPoint(this.a, dist);
+      point = point.translate(startPoint.x, startPoint.y);
+      points.push(point);
+    });
+    return points;
   }
+
+  calcLength() {
+    this.length = Clothoid.calcL(this.a, this.radius);
+  }
+
   static calcA(length, radius) {
     return Math.sqrt(length * radius);
   }
   static calcL(a, radius) {
+    if (radius == Infinity || a == Infinity || radius == 0 || a == 0) return 0;
     return (a * a) / radius;
+  }
+
+  static calcR(a, length) {
+    if (length == Infinity || a == Infinity || length == 0 || a == 0) return 0;
+    return length / (a * a);
   }
 
   static calcPoint(a, length) {
@@ -44,7 +67,7 @@ export default class Clothoid extends Curve {
     let uXy = new Point(0, 0);
     let jl = length / a;
     let jb = jl * jl;
-    
+
     //	수학식 2^n*n!*(2*n+1). 참조 사이트 : http://oeis.org/A014481/list
     uXy.x =
       length *
