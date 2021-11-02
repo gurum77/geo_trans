@@ -13,6 +13,40 @@ export default class Point {
     this.x = parseFloat(arr[0]);
     this.y = parseFloat(arr[1]);
   }
+
+  /**
+   * radian으로 단위 벡터 설정
+   * @param {number} radian 
+   */
+  fromRadian(radian){
+    this.x = Math.cos(radian);
+    this.y = Math.sin(radian);
+  }
+
+  /**
+   * 벡터의 길이 리턴
+   */
+  getLength() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  /**
+   * 단위벡터 리턴
+   */
+  getNormalize() {
+    let len = this.getLength();
+    if (len == 0) len = 1;
+    return new Point(this.x / len, this.y / len);
+  }
+  /**
+   * radian으로 리턴
+   */
+  toRadian() {
+    let vec = this.getNormalize();
+    let res = Math.acos(vec.x / vec.getLength());
+    return this.y >= 0.0 ? res : 2 * Math.PI - res;
+  }
+
   Point(x, y) {
     this.x = x;
     this.y = y;
@@ -46,6 +80,21 @@ export default class Point {
     return new Point(this.x * value, this.y * value);
   }
 
+
+  /**
+   * point를 원점 x축 기준으로 mirror
+   */
+  mirrorX(){
+    return new Point(this.x * -1, this.y);
+  }
+
+  /**
+   * point를 원점 기준으로 회전해서 리턴
+   * @param {Point} dir 
+   */
+  rotate(dir){
+    return new Point(this.x * dir.x - this.y * dir.y, this.x * dir.y + this.y * dir.x);
+  }
   /**
    * point를 x, y만큼 이동한 좌표를 리턴
    * @param {number} x

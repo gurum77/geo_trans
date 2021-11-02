@@ -6,6 +6,18 @@ export default class Curve {
   dir = new Point(1, 0);
 
   /**
+   * 시작부터 떨어진 거리에서의 방향
+   * @param {number} distFromStt
+   */
+  getDir(distFromStt) {
+    return this.dir;
+  }
+
+  getEndDir() {
+    return this.dir;
+  }
+  
+  /**
    * interval로 나눈 거리값들을 리턴
    * @param {number} interval
    */

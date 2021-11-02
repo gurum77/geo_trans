@@ -6,13 +6,14 @@ import Clothoid from "./clothoid.js";
 export default class Alignment {
   startPoint = new Point();
   curves = []; // curve들을 담고 있는다.
+  dir = new Point();
 
   draw() {
     // 20미터 간격으로 점을 추출
     let points = this.getPoints(20);
 
     // 맵에 점을 찍는다.
-    mapManager.drawPoints(points);
+    mapManager.drawPolyline(points);
   }
 
   // interval 간격으로 좌표들을 계산한다.
@@ -48,6 +49,7 @@ export default class Alignment {
    * clothoid,l=200,r=200,a=150
    * @param {string} str
    * @param {Point} dir
+   * @returns {Point} endDir
    */
   addCurveByScript(str, dir) {
     let obj = this.parseScript(str);
@@ -64,16 +66,33 @@ export default class Alignment {
       arc.radius = this.getFloat(obj, "r");
       arc.length = this.getFloat(obj, "l");
       arc.dir = dir;
+      arc.ccw = this.getBool(obj, "ccw");
       this.curves.push(arc);
-    } else if(tag == "clothoid"){
-        let clothoid = new Clothoid();
-        clothoid.a = this.getFloat(obj, "a");
-        clothoid.radius = this.getFloat(obj, "r1");
-        clothoid.dir = dir;
-        clothoid.calcLength();
-        this.curves.push(clothoid);
+    } else if (tag == "clothoid") {
+      let clothoid = new Clothoid();
+      clothoid.a = this.getFloat(obj, "a");
+      clothoid.radius1 = this.getFloat(obj, "r1");
+      clothoid.radius2 = this.getFloat(obj, "r2");
+      clothoid.dir = dir;
+      clothoid.ccw = this.getBool(obj, "ccw");
+      clothoid.calcLength();
+      this.curves.push(clothoid);
     }
-}
+
+    return this.curves[this.curves.length - 1].getEndDir();
+  }
+  /**
+   *
+   * @param {Map} map
+   * @param {string} key
+   */
+  getBool(map, key) {
+    let v = String(map.get(key)).toLowerCase();
+    if (v == "false") return false;
+
+    if (map.has(key)) return Boolean(v);
+    return false;
+  }
 
   /**
    *

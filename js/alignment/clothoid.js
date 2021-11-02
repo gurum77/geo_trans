@@ -26,7 +26,22 @@ const math17 = math171 * math172;
 
 export default class Clothoid extends Curve {
   a = 0;
-  radius = 0;
+  radius1 = 0;
+  radius2 = 0;
+  ccw = true;
+
+  /**
+   * 시작부터 떨어진 거리에서의 방향
+   * @param {number} distFromStt
+   */
+  getDir(distFromStt) {
+    return Clothoid.calcDir(this.a, distFromStt, this.ccw, this.dir);
+  }
+
+  // 마지막지점의 dir
+  getEndDir() {
+    return this.getDir(this.length);
+  }
 
   /**
    * startPoint부터 interval 간격으로 좌표를 리턴
@@ -38,6 +53,37 @@ export default class Clothoid extends Curve {
     let distances = this.getDistances(interval);
     distances.forEach((dist) => {
       let point = Clothoid.calcPoint(this.a, dist);
+      
+
+      // 직선
+      if(this.radius1 == 0 && this.radius2 == 0){
+
+      }
+      // 클로소이드
+      else if(this.radius1 == 0 && this.radius2 > 0){
+        point = point.rotate(this.dir);  
+      }
+      // 반전 클로소이드
+      else if(this.radius1 > 0 && this.radius2 == 0){
+        // 원점 기준의 좌표를
+        // mirror X
+        // move X
+        // rotate endDir
+        let absX = point.x;
+        point = point.mirrorX();
+        point = point.translate(absX, 0);
+        point = point.rotate(Clothoid.calcDir(this.a, this.length));
+      }
+      // 난형 클로소이드
+      else if(this.radius1 > this.radius2){
+
+      }
+      // 반전 난형 클로소이드
+      else if(this.radius1 < this.radius2){
+
+      }
+
+      if (!this.ccw) point.y *= -1;
       point = point.translate(startPoint.x, startPoint.y);
       points.push(point);
     });
@@ -45,7 +91,31 @@ export default class Clothoid extends Curve {
   }
 
   calcLength() {
-    this.length = Clothoid.calcL(this.a, this.radius);
+    this.length = Clothoid.calcL(this.a, this.radius1);
+  }
+  
+  
+  /**
+   * distFromStt 지점에서의 방향을 계산
+   * @param {number} a 
+   * @param {number} distFromStt 
+   * @param {boolean} ccw 
+   * @param {Point} dir 
+   * @return {Point} 마지막 지점에서의 방향
+   */
+  static calcDir(a, distFromStt, ccw=true, dir=new Point(1, 0)){
+    let aa = a * a;
+
+    // 반시계 방향이 아니면 시계방향으로 돌린다.
+    if (!ccw) aa *= -1.0;
+
+    // radian
+    let direction = dir.toRadian();
+    direction += (distFromStt * distFromStt) / (2 * aa);
+
+    let endDir = new Point();
+    endDir.fromRadian(direction);
+    return endDir;
   }
 
   static calcA(length, radius) {

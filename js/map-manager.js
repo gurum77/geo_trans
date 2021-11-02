@@ -16,35 +16,47 @@ export default class MapManager {
     this.vMapManager.init(vMapContainer);
   }
 
-  setCenter(lat, lng){
+  setCenter(lat, lng) {
     this.kMapManager.setCenter(lat, lng);
     this.vMapManager.setCenter(lat, lng);
   }
 
-  
-  addMarker(lat, lng){
+  addMarker(lat, lng) {
     this.kMapManager.addMarker(lat, lng);
     this.vMapManager.addMarker(lat, lng);
   }
 
-  clearMarkers(){
+  clearMarkers() {
     this.kMapManager.clearMarkers();
     this.vMapManager.clearMarkers();
   }
 
   /**
-   * xy좌표로 점을 찍는다.
-   * @param {[]} points 
+   * xy point들을 latlng로 변환
+   * @param {[]} points
    */
-  drawPoints(points){
-    
+  toLatLngs(points) {
     let latLngs = [];
-    points.forEach(p=>{
+    points.forEach((p) => {
       let latlng = new LatLng();
       latlng.fromXY(p.x, p.y);
       latLngs.push(latlng);
     });
+
+    return latLngs;
+  }
+  /**
+   * xy좌표로 점을 찍는다.
+   * @param {[]} points
+   */
+  drawPoints(points) {
+    let latLngs = this.toLatLngs(points);
     this.kMapManager.drawPoints(latLngs);
     this.vMapManager.drawPoints(latLngs);
+  }
+
+  drawPolyline(points) {
+    let latLngs = this.toLatLngs(points);
+    this.kMapManager.drawPolyline(latLngs);
   }
 }

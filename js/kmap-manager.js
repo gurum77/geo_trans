@@ -68,4 +68,23 @@ export default class KMapManager {
   drawPoints(latLngs) {
     latLngs.forEach((latLng) => this.addMarker(latLng.lat, latLng.lng));
   }
+
+  /**
+   * 위경도를 받아서 polyline을 그린다.
+   * @param {[]} latLngs
+   */
+  drawPolyline(latLngs) {
+    let path = [];
+    latLngs.forEach((latLng) => {
+      path.push(new kakao.maps.LatLng(latLng.lat, latLng.lng));
+    });
+
+    let polyline = new kakao.maps.Polyline({
+      path: path,
+      strokeWeight: 5,
+      strokeColor: "#FF0000",
+      strokeStyle: 'solid',
+    });
+    polyline.setMap(this.map);
+  }
 }
