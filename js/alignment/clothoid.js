@@ -71,7 +71,8 @@ export default class Clothoid extends Curve {
     let inverse = this.isInverse();
     distances.forEach((dist) => {
       let point = Clothoid.calcPoint(this.a, inverse ? this.length - dist : dist);
-
+      if (!this.ccw) point.y *= -1;
+      
       // 직선
       if (this.radius1 == 0 && this.radius2 == 0) {
 
@@ -94,7 +95,7 @@ export default class Clothoid extends Curve {
 
       }
 
-      if (!this.ccw) point.y *= -1;
+
       point = point.translate(startPoint.x, startPoint.y);
       points.push(point);
     });

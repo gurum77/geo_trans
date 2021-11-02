@@ -14,4 +14,11 @@ export default class Line extends Curve {
 
     return points;
   }
+
+  getPoint(startPoint, distFromStt, offset){
+    let perVec = this.getPerDir(distFromStt).mul(offset);
+    let vec = this.dir.mul(distFromStt);
+    let centerPoint = startPoint.sum(vec.x, vec.y);
+    return centerPoint.sum(perVec.x, perVec.y);
+  }
 }

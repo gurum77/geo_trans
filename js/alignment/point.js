@@ -62,6 +62,7 @@ export default class Point {
     return this.x === other.x && this.y === other.y;
   }
 
+  
   /**
    *
    * @param {number} x
@@ -70,6 +71,10 @@ export default class Point {
    */
   sub(x, y) {
     return new Point(this.x - x, this.y - y);
+  }
+
+  sum(x, y){
+    return new Point(this.x + x, this.y + y);
   }
 
   /**

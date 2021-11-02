@@ -4,6 +4,16 @@ import Point from "./point.js";
 export default class Curve {
   length = 0.0;
   dir = new Point(1, 0);
+  startPoint = new Point(0, 0);
+
+  /**
+   * 시작부터 떨어진 거리에서의 우측수직방향
+   * @param {number} distFromStt
+   */
+  getPerDir(distFromStt) {
+    let dir = this.getDir(distFromStt);
+    return dir.rotate(new Point(0, -1));
+  }
 
   /**
    * 시작부터 떨어진 거리에서의 방향
@@ -16,7 +26,10 @@ export default class Curve {
   getEndDir() {
     return this.dir;
   }
-  
+
+  getEndPoint(){
+    this.getEndPoint()
+  }
   /**
    * interval로 나눈 거리값들을 리턴
    * @param {number} interval

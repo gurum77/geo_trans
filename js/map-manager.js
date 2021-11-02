@@ -59,4 +59,8 @@ export default class MapManager {
     let latLngs = this.toLatLngs(points);
     this.kMapManager.drawPolyline(latLngs);
   }
+
+  drawLine(pt1, pt2){
+    this.drawPolyline([pt1, pt2]);
+  }
 }
