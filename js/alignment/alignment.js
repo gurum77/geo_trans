@@ -27,18 +27,18 @@ export default class Alignment {
    * @param {number} distance
    */
   drawTick(distance) {
-    let pt1 = this.getPoint(distance, -1);
-    let pt2 = this.getPoint(distance, 1);
+    let pt1 = this.getPoint(distance, -3);
+    let pt2 = this.getPoint(distance, 3);
     mapManager.drawLine(pt1, pt2, 1, "#ffff00");
   }
 
   // distFromStt위치에 있는 curve 리턴
-  getCurveInfoAtDistFromStt(distFromStt) {
+  getCurveAtDistFromStt(distFromStt) {
     let curDist = 0;
     for (let i = 0; i < this.curves.length; ++i) {
       let c = this.curves[i];
       if (curDist + c.length > distFromStt) {
-        return { curve: c, distToPrevCurve: curDist };
+        return c;
       }
       curDist += c.length;
     }
@@ -51,9 +51,12 @@ export default class Alignment {
    */
   getPoint(distFromStt, offset) {
     // curve와 curve이전까지 누적 거리
-    let curveInfo = this.getCurveInfoAtDistFromStt(distFromStt);
-    let distFromCurveStt = distFromStt - curveInfo.distToPrevCurve;
-    return curveInfo.curve.getPoint(distFromCurveStt, offset);
+    let curve = this.getCurveAtDistFromStt(distFromStt);
+    if(curve == undefined)
+      return new Point(0, 0);
+
+    let distFromCurveStt = distFromStt - curve.distFromAlignmentStt;
+    return curve.getPoint(distFromCurveStt, offset);
   }
 
   /**
@@ -83,14 +86,10 @@ export default class Alignment {
   // interval 간격으로 좌표들을 계산한다.
   getPoints(interval) {
     let points = [];
-    let curStartPoint = this.startPoint;
     this.curves.forEach((curve) => {
-      let curvePoints = curve.getPoints(curStartPoint, interval);
+      let curvePoints = curve.getPoints(interval);
       if (curvePoints != undefined) {
         curvePoints.forEach((p) => points.push(p));
-
-        if (curvePoints.length > 0)
-          curStartPoint = curvePoints[curvePoints.length - 1];
       }
     });
 
@@ -112,10 +111,11 @@ export default class Alignment {
    * arc,l=100,r=200
    * clothoid,l=200,r=200,a=150
    * @param {string} str
+   * @param {Point} startPoint
    * @param {Point} dir
-   * @returns {Point} endDir
+   * @returns {Curve} 마지막으로 추가된 curve
    */
-  addCurveByScript(str, dir) {
+  addCurveByScript(str, startPoint, dir) {
     let obj = this.parseScript(str);
     if (!obj.has("tag")) return false;
 
@@ -123,13 +123,11 @@ export default class Alignment {
     if (tag == "line") {
       let line = new Line();
       line.length = this.getFloat(obj, "l");
-      line.dir = dir;
       this.curves.push(line);
     } else if (tag == "arc") {
       let arc = new Arc();
       arc.radius = this.getFloat(obj, "r");
       arc.length = this.getFloat(obj, "l");
-      arc.dir = dir;
       arc.ccw = this.getBool(obj, "ccw");
       this.curves.push(arc);
     } else if (tag == "clothoid") {
@@ -137,13 +135,23 @@ export default class Alignment {
       clothoid.a = this.getFloat(obj, "a");
       clothoid.radius1 = this.getFloat(obj, "r1");
       clothoid.radius2 = this.getFloat(obj, "r2");
-      clothoid.dir = dir;
       clothoid.ccw = this.getBool(obj, "ccw");
       clothoid.calcLength();
       this.curves.push(clothoid);
     }
 
-    return this.curves[this.curves.length - 1].getEndDir();
+    // 공통으로설정해야 하는 것들
+    let lastCurve = this.curves[this.curves.length - 1];
+    lastCurve.dir = dir;
+    lastCurve.startPoint = startPoint;
+    lastCurve.index = this.curves.length-1;
+    lastCurve.distFromAlignmentStt = 0;
+    if(this.curves.length > 1){
+      let lastPrevCurve = this.curves[this.curves.length - 2];
+      lastCurve.distFromAlignmentStt = lastPrevCurve.distFromAlignmentStt + lastPrevCurve.length;
+    }
+      
+    return lastCurve;
   }
   /**
    *

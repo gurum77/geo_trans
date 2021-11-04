@@ -35,7 +35,13 @@ export default class Clothoid extends Curve {
    * @param {number} distFromStt
    */
   getDir(distFromStt) {
-    return Clothoid.calcDir(this.a, distFromStt, this.ccw, this.dir);
+    let inverse = this.isInverse();
+    if(!inverse)
+      return Clothoid.calcDir(this.a, distFromStt, this.ccw, this.dir); 
+
+    // inverse이면 크로소이드를 뒤집어서 계산해야함
+    let endDir = Clothoid.calcDir(this.a, this.length, this.ccw, this.dir);
+    return Clothoid.calcDir(this.a, inverse ? this.length - distFromStt : distFromStt, inverse ? !this.ccw : this.ccw, endDir); 
   }
 
   // 마지막지점의 dir
@@ -44,20 +50,61 @@ export default class Clothoid extends Curve {
   }
 
   /**
+   * 크로소이드 시점에서 떨어진 거리에서의 좌표
+   * @param {number} distFromStt
+   * @param {number} offset
+   */
+  getPoint(distFromStt, offset) {
+    
+
+    // center point 계산
+    let inverse = this.isInverse();
+    let centerPoint = Clothoid.calcPoint(
+      this.a,
+      inverse ? this.length - distFromStt : distFromStt
+    );
+    if (!this.ccw) centerPoint.y *= -1;
+
+    // 직선
+    if (this.radius1 == 0 && this.radius2 == 0) {
+    }
+    // 클로소이드
+    else if (this.radius1 == 0 && this.radius2 > 0) {
+      centerPoint = centerPoint.rotate(this.dir);
+    }
+    // 반전 클로소이드
+    else if (this.radius1 > 0 && this.radius2 == 0) {
+      centerPoint = this.toInversePoint(centerPoint);
+      centerPoint = centerPoint.rotate(this.dir);
+    }
+    // 난형 클로소이드
+    else if (this.radius1 > this.radius2) {
+    }
+    // 반전 난형 클로소이드
+    else if (this.radius1 < this.radius2) {
+    }
+
+    centerPoint = centerPoint.translate(this.startPoint.x, this.startPoint.y);
+
+    // offset
+    if(offset != 0){
+      let perVec = this.getPerDir(distFromStt).mul(offset);
+      return centerPoint.sum(perVec.x, perVec.y);
+    }
+
+    return centerPoint;
+  }
+
+  /**
    * 반전 클로소이드인지?(직선->곡선이 정상임)
    */
   isInverse() {
-    if (this.radius1 > 0 && this.radius2 == 0)
-      return true;
+    if (this.radius1 > 0 && this.radius2 == 0) return true;
 
-    if (this.radius1 == 0 && this.radius2 > 0)
-      return false;
-    if (this.radius1 == 0 && this.radius2 == 0)
-      return false;
+    if (this.radius1 == 0 && this.radius2 > 0) return false;
+    if (this.radius1 == 0 && this.radius2 == 0) return false;
 
-
-    if (this.radius1 > this.radius2)
-      return false;
+    if (this.radius1 > this.radius2) return false;
     return true;
   }
   /**
@@ -65,38 +112,12 @@ export default class Clothoid extends Curve {
    * @param {Point} startPoint
    * @param {number} interval
    */
-  getPoints(startPoint, interval) {
+  getPoints(interval) {
     let points = [];
     let distances = this.getDistances(interval);
-    let inverse = this.isInverse();
+
     distances.forEach((dist) => {
-      let point = Clothoid.calcPoint(this.a, inverse ? this.length - dist : dist);
-      if (!this.ccw) point.y *= -1;
-      
-      // 직선
-      if (this.radius1 == 0 && this.radius2 == 0) {
-
-      }
-      // 클로소이드
-      else if (this.radius1 == 0 && this.radius2 > 0) {
-        point = point.rotate(this.dir);
-      }
-      // 반전 클로소이드
-      else if (this.radius1 > 0 && this.radius2 == 0) {
-        point = this.toInversePoint(point);
-        point = point.rotate(this.dir);
-      }
-      // 난형 클로소이드
-      else if (this.radius1 > this.radius2) {
-
-      }
-      // 반전 난형 클로소이드
-      else if (this.radius1 < this.radius2) {
-
-      }
-
-
-      point = point.translate(startPoint.x, startPoint.y);
+      let point = this.getPoint(dist, 0);
       points.push(point);
     });
     return points;
@@ -108,12 +129,11 @@ export default class Clothoid extends Curve {
    * mirror X
    * move 전체폭
    * rotate endDir
-   * @param {Point} point 
+   * @param {Point} point
    */
   toInversePoint(point) {
     let originEndPoint = Clothoid.calcPoint(this.a, this.length);
     let originEndDir = Clothoid.calcDir(this.a, this.length);
-
 
     let inversePoint = point.mirrorX();
     inversePoint = inversePoint.translate(originEndPoint.x, -originEndPoint.y);
@@ -131,16 +151,14 @@ export default class Clothoid extends Curve {
       let l2 = Clothoid.calcL(this.a, this.radius2);
       this.length = Math.abs(l1 - l2);
     }
-
   }
-
 
   /**
    * distFromStt 지점에서의 방향을 계산
-   * @param {number} a 
-   * @param {number} distFromStt 
-   * @param {boolean} ccw 
-   * @param {Point} dir 
+   * @param {number} a
+   * @param {number} distFromStt
+   * @param {boolean} ccw
+   * @param {Point} dir
    * @return {Point} 마지막 지점에서의 방향
    */
   static calcDir(a, distFromStt, ccw = true, dir = new Point(1, 0)) {
@@ -189,7 +207,7 @@ export default class Clothoid extends Curve {
         (jb * jb * jb * jb * jb * jb * jb * jb * jb * jb) / math10 +
         (jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb) / math12 -
         (jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb) /
-        math14 +
+          math14 +
         (jb *
           jb *
           jb *
@@ -206,7 +224,7 @@ export default class Clothoid extends Curve {
           jb *
           jb *
           jb) /
-        math16);
+          math16);
 
     uXy.y =
       length *
@@ -219,7 +237,7 @@ export default class Clothoid extends Curve {
         (jb * jb * jb * jb * jb * jb * jb * jb * jb * jb) / math11 +
         (jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb) / math13 -
         (jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb * jb) /
-        math15 +
+          math15 +
         (jb *
           jb *
           jb *
@@ -236,7 +254,7 @@ export default class Clothoid extends Curve {
           jb *
           jb *
           jb) /
-        math17);
+          math17);
 
     return uXy;
   }

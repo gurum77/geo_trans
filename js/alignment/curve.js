@@ -5,6 +5,8 @@ export default class Curve {
   length = 0.0;
   dir = new Point(1, 0);
   startPoint = new Point(0, 0);
+  distFromAlignmentStt = 0; // alignment의 시작에서 떨어진 거리
+  index = -1; // alignment에 들어갔을때의 인덱스(빠른 계산을 위함)
 
   /**
    * 시작부터 떨어진 거리에서의 우측수직방향
@@ -26,9 +28,22 @@ export default class Curve {
   getEndDir() {
     return this.dir;
   }
+  /**
+   * 
+   * @param {number} distFromStt 
+   * @param {number} offset 
+   * @returns 
+   */
+   getPoint(distFromStt, offset){
+    let perVec = this.getPerDir(distFromStt).mul(offset);
+    let vec = this.dir.mul(distFromStt);
+    let centerPoint = this.startPoint.sum(vec.x, vec.y);
+    return centerPoint.sum(perVec.x, perVec.y);
+  }
+
 
   getEndPoint(){
-    this.getEndPoint()
+    return this.getPoint(this.length, 0);
   }
   /**
    * interval로 나눈 거리값들을 리턴

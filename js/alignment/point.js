@@ -93,6 +93,7 @@ export default class Point {
     return new Point(this.x * -1, this.y);
   }
 
+  
   /**
    * point를 원점 기준으로 회전해서 리턴
    * @param {Point} dir 
