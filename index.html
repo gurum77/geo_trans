@@ -37,7 +37,7 @@
         value="186799.30748,514917.91631" />
       <br />
       <h3>방향(Degree)</h3>
-      <input class="coordinates" id="dir" type="text" placeholder="0" value = "0"/>
+      <input class="coordinates" id="dir" type="text" placeholder="0" value="0" />
       <br />
       <h3>곡선제원</h3>
       <textarea class="curves" name="curves" id="curves" col="95%" rows="10" placeholder="line,l=100
@@ -117,6 +117,54 @@ line,l=200
       document.getElementById("kmap"),
       document.getElementById("vmap")
     );
+  </script>
+  <script src="./js/threejs/three.js"></script>
+  <script src="./js/threejs/OrbitControls.js"></script>
+  <script src="./js/threejs/GLTFExporter.js"></script>
+  <script>
+    window.addEventListener("load", afterLoaded, false);
+    function afterLoaded() {
+
+
+      let kmapEle = document.getElementById("kmap");
+      let width = kmapEle.clientWidth;
+      let height = kmapEle.clientHeight;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(width, height);
+      kmapEle.appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+      const geometry = new THREE.BoxGeometry();
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+      camera.position.z = 5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      const exporter = new THREE.GLTFExporter();
+
+      exporter.parse(scene, function (gltf) {
+        console.log(gltf);
+        let blob = new Blob([gltf], { type: "application/octet-stream" });
+        let d = document.createElement('a');
+        d.href = window.URL.createObjectURL(blob);
+        d.download = "test.gltf"
+        document.body.appendChild(d);
+        d.click();
+        document.body.removeChild(d);
+      }, { binary: true });
+    }
+
   </script>
 </body>
 
