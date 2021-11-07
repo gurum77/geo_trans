@@ -14,23 +14,41 @@ function saveAlignment() {
   let alignment = makeAlignment();
 
   let interval = 20;
-  var points = alignment.getPoints(interval);
+  // var points = alignment.getPoints(interval);
+  let distances = alignment.getDistances(interval);
   const scene = new THREE.Scene();
- 
+  const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+  const vertices = new Float32Array(distances.length * 3 * 2 * 2);
+  let idx = 0;
+  distances.forEach(d => {
+    let leftPoint = alignment.getPoint(d, -20);
+    let rightPoint = alignment.getPoint(d, 20);
+    vertices[idx++] = leftPoint.x - alignment.startPoint.x;
+    vertices[idx++] = leftPoint.y - alignment.startPoint.y;
+    vertices[idx++] = 0;
 
- 
-  points.forEach(p=>{
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-  const geometry = new THREE.BoxGeometry(interval, interval, interval);
-    geometry.translate(p.x - alignment.startPoint.x, p.y - alignment.startPoint.y, 0);
-   
-    const cube = new THREE.Mesh(geometry, material);
-    
-    
-    scene.add(cube);
+    vertices[idx++] = rightPoint.x - alignment.startPoint.x;
+    vertices[idx++] = rightPoint.y - alignment.startPoint.y;
+    vertices[idx++] = 0;
+  })
 
-    
-  });
+  let geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+  // points.forEach(p => {
+  //   const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+  //   const geometry = new THREE.CylinderGeometry(5, 5, 10, 16);
+  //   // geometry.translate(0, p.x - alignment.startPoint.x, p.y - alignment.startPoint.y);
+  //   geometry.translate(p.y - alignment.startPoint.y, p.x - alignment.startPoint.x, 0)
+
+  //   const cube = new THREE.Mesh(geometry, material);
+
+
+  //   scene.add(cube);
+
+
+  // });
 
   let kmapEle = document.getElementById("kmap");
   let width = kmapEle.clientWidth;
@@ -58,12 +76,12 @@ function saveAlignment() {
 }
 
 function addToVmap(glb, alignment) {
-  
+
   let bp = alignment.startPoint;
   let latLng = new LatLng();
   latLng.fromXY(bp.x, bp.y);
   let point = new vw.CoordZ(latLng.lng, latLng.lat, 0);
-  let options = {scale:1, minimumPixelSize:100};
+  let options = { scale: 1, minimumPixelSize: 100 };
   let id = "test1";
   let modelz = new vw.geom.ModelZ(id);
 
@@ -74,7 +92,8 @@ function addToVmap(glb, alignment) {
   modelz.setCoordz(point);
   modelz.setOptions(options);
   modelz.create();
-
+  console.dir(modelz);
+  
 }
 function downloadGltf(gltf, fileName) {
   let blob = new Blob([gltf], { type: "application/octet-stream" });
